@@ -1,7 +1,20 @@
 # Centralized Monitoring Platform for Railway Signaling Equipment, Maintenance, Fault Reporting & Compliance
 
 > **Final-Year Engineering Degree Project in Computer Science / Information Technology**  
-> **Full-Stack MERN Application (MongoDB, Express.js, React.js, Node.js)**
+> **Full-Stack MERN Application (MongoDB, Express.js, React.js, Node.js)**  
+> 🔗 **GitHub Repository:** [https://github.com/msuhaybuddin-cyber/Railway-monitoring-platform-2026](https://github.com/msuhaybuddin-cyber/Railway-monitoring-platform-2026)
+
+---
+
+## 🌐 1-Click Free Cloud Deployment (Render.com)
+
+This repository is pre-configured with `render.yaml` for instant free deployment of both frontend and backend on Render:
+
+1. Create a free account on [Render.com](https://render.com).
+2. Click **New +** > **Blueprint**.
+3. Connect your GitHub account and select repository: **`msuhaybuddin-cyber/Railway-monitoring-platform-2026`**.
+4. Click **Apply**.
+5. Render will automatically build the React frontend, configure the Express backend, and launch your live public URL (e.g. `https://railway-signaling-platform.onrender.com`)!
 
 ---
 
