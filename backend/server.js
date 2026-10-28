@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const path = require('path');
 const fs = require('fs');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
@@ -29,9 +30,12 @@ const reportRoutes = require('./routes/reportRoutes');
 
 // API Health Check
 app.get('/api/health', (req, res) => {
+  const dbState = mongoose.connection.readyState;
+  const dbStatus = dbState === 1 ? 'connected' : dbState === 2 ? 'connecting' : 'disconnected';
   res.json({
     status: 'OK',
     service: 'Centralized Railway Signaling Monitoring Platform API',
+    database: dbStatus,
     timestamp: new Date().toISOString(),
   });
 });
@@ -74,23 +78,29 @@ const startServer = async () => {
   try {
     await connectDB();
 
-    // Check if database is empty and auto-seed if needed
-    const User = require('./models/User');
-    const userCount = await User.countDocuments();
-    if (userCount === 0) {
-      console.log('⚡ Empty database detected. Auto-populating sample dataset...');
-      const { seedDatabase } = require('./utils/seedData');
-      await seedDatabase(false);
+    // Check if database is connected and empty, auto-seed if needed
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const User = require('./models/User');
+        const userCount = await User.countDocuments();
+        if (userCount === 0) {
+          console.log('⚡ Empty database detected. Auto-populating sample dataset...');
+          const { seedDatabase } = require('./utils/seedData');
+          await seedDatabase(false);
+        }
+      } catch (seedErr) {
+        console.warn('⚠️ Auto-seed check skipped:', seedErr.message);
+      }
     }
 
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚆 Railway Monitoring Backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
       console.log(`📡 API Health: http://localhost:${PORT}/api/health`);
     });
   } catch (error) {
-  console.error('Failed to start server:', error);
-  process.exit(1);
-}
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
 };
 
 startServer();

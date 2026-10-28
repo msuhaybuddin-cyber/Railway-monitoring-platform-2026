@@ -8,13 +8,42 @@
 
 ## 🌐 1-Click Free Cloud Deployment (Render.com)
 
-This repository is pre-configured with `render.yaml` for instant free deployment of both frontend and backend on Render:
+This repository is pre-configured with `render.yaml` for instant free deployment of both frontend and backend as a unified full-stack web service on Render:
 
-1. Create a free account on [Render.com](https://render.com).
+### Method A: Render Blueprint (Recommended - 1 Click)
+1. Sign in to [Render.com](https://render.com).
 2. Click **New +** > **Blueprint**.
 3. Connect your GitHub account and select repository: **`msuhaybuddin-cyber/Railway-monitoring-platform-2026`**.
-4. Click **Apply**.
-5. Render will automatically build the React frontend, configure the Express backend, and launch your live public URL (e.g. `https://railway-signaling-platform.onrender.com`)!
+4. When prompted for `MONGO_URI`, paste your MongoDB Atlas connection string (or enter it later in the Environment tab).
+5. Click **Apply**. Render will automatically run `npm run build`, start the unified full-stack server, and give you your live URL!
+
+### Method B: Manual Web Service Setup on Render
+1. In Render Dashboard, click **New +** > **Web Service**.
+2. Connect your GitHub repository **`Railway-monitoring-platform-2026`**.
+3. Configure the following settings:
+   - **Name:** `railway-signaling-platform` (or any name you prefer)
+   - **Language / Environment:** `Node`
+   - **Branch:** `main`
+   - **Build Command:** `npm run build`
+   - **Start Command:** `npm start`
+   - **Plan:** `Free`
+4. Add the following **Environment Variables** in the **Environment** tab:
+   - `NODE_ENV` = `production`
+   - `PORT` = `10000`
+   - `JWT_SECRET` = `railway_signaling_secret_key_2026_super_secure`
+   - `MONGO_URI` = `mongodb+srv://<username>:<password>@<cluster>.mongodb.net/railway_monitoring?retryWrites=true&w=majority`
+5. Click **Deploy Web Service**.
+
+### 🍃 Setting up Free MongoDB Atlas (3 Minutes)
+1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a free account.
+2. Create a free shared cluster (**M0 Free**).
+3. Under **Security** > **Database Access**: Create a database user (e.g. `railway_admin`) and set a password.
+4. Under **Security** > **Network Access**: Click **Add IP Address** > Choose **Allow Access from Anywhere** (`0.0.0.0/0`) > Click **Confirm**. *(Important: Render requires 0.0.0.0/0 because its free-tier cloud servers use dynamic IP addresses).*
+5. Under **Database** > Click **Connect** > Choose **Drivers (Node.js)** > Copy the connection string.
+6. Replace `<password>` with your database user password and append `/railway_monitoring` before the `?`:
+   `mongodb+srv://railway_admin:YOUR_PASSWORD@cluster0.abcde.mongodb.net/railway_monitoring?retryWrites=true&w=majority`
+7. Paste this connection string into Render's `MONGO_URI` environment variable.
+8. The server will automatically connect to Atlas and auto-seed the complete 20-equipment dataset!
 
 ---
 
